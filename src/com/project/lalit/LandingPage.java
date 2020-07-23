@@ -46,7 +46,14 @@ public class LandingPage extends JFrame implements ActionListener {
             button1.showFrame();
             super.dispose();
         }
+        else if(event.getSource()==btn2){
+            btn2Login button2 =new btn2Login();
+            button2.showFrame();
+            super.dispose();
+        }
     }
+
+
 }
 
 
