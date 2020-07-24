@@ -4,8 +4,12 @@ import javax.swing.*;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 
 class LimitContact extends PlainDocument {
@@ -118,6 +122,7 @@ public class btn1Signup extends JFrame implements ActionListener {
         submit =new JButton("Submit");
         submit.setBounds(125,260,80,25);
         super.add(submit);
+        submit.addActionListener(this);
 
         home =new JButton("Home");
         home.setBounds(125,310,80,25);
@@ -146,5 +151,53 @@ public class btn1Signup extends JFrame implements ActionListener {
 
         //--------------------------------------------------------------------------------------------------------//
 
+        else if(event.getSource().equals(submit)){
+
+            if(nameField.getText().toUpperCase().trim().isBlank()){
+                nameField.setBackground(Color.black);
+                nameField.setText("All fields are mandatory.");
+                nameField.setForeground(Color.white);
+            }
+            else if(emailField.getText().toUpperCase().trim().isBlank()){
+                emailField.setBackground(Color.black);
+                emailField.setText("All fields are mandatory.");
+                emailField.setForeground(Color.white);
+            }
+            else if(mobileField.getText().toUpperCase().trim().isBlank()){
+                mobileField.setBackground(Color.black);
+                mobileField.setText("All fields are mandatory.");
+                mobileField.setForeground(Color.white);
+            }
+            else if(passwordField.getText().toUpperCase().trim().isBlank()){
+                passwordField.setBackground(Color.black);
+                passwordField.setText("All fields are mandatory.");
+                passwordField.setForeground(Color.white);
+            }
+            else if(confirmPassField.getText().toUpperCase().trim().isBlank()){
+                confirmPassField.setBackground(Color.black);
+                confirmPassField.setText("All fields are mandatory.");
+                confirmPassField.setForeground(Color.white);
+            }
+            else if(addressArea.getText().toUpperCase().trim().isBlank()){
+                addressArea.setBackground(Color.black);
+                addressArea.setText("All fields are mandatory.");
+                addressArea.setForeground(Color.white);
+            }
+            else if(areaOfIntField.getText().toUpperCase().trim().isBlank()){
+                areaOfIntField.setBackground(Color.black);
+                areaOfIntField.setText("All fields are mandatory.");
+                areaOfIntField.setForeground(Color.white);
+            }
+            else{
+                try {
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    Connection co = DriverManager.getConnection("jdbc:mysql://localhost:3306/userInformation",
+                            "root","root");
+                    //System.out.println("connected");
+                } catch (ClassNotFoundException | SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }
