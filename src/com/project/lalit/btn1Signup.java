@@ -12,7 +12,6 @@ import java.awt.event.KeyEvent;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
-import java.util.Scanner;
 
 
 class LimitContact extends PlainDocument {
@@ -46,13 +45,10 @@ class LimitName extends PlainDocument {
 }
 
 public class btn1Signup extends JFrame implements ActionListener {
-
-    Scanner sc = new Scanner(System.in);
     boolean first=true;
-
     String nameVar;
     String emailVar;
-    int mobileNo;
+    String mobileNo;
     String passwordVar;
     String addressVar;
     String aOI;
@@ -67,13 +63,14 @@ public class btn1Signup extends JFrame implements ActionListener {
     JTextField nameField;
     JTextField emailField;
     JTextField mobileField;
-    JTextField passwordField;
-    JTextField confirmPassField;
+    JPasswordField passwordField;
+    JPasswordField confirmPassField;
     JTextField areaOfIntField;
     JTextArea addressArea;
     JScrollPane pane;
     JButton submit;
     JButton home;
+    JButton reset;
 
 
     public void showFrame() {
@@ -99,59 +96,42 @@ public class btn1Signup extends JFrame implements ActionListener {
         mobile = new JLabel("Mobile:");
         mobile.setBounds(20, 80, 60, 25);
         super.add(mobile);
-
-        /*NumberFormat format = NumberFormat.getInstance();
-        NumberFormatter formatter = new NumberFormatter(format);
-        formatter.setValueClass(Integer.class);
-        formatter.setMinimum(0);
-        formatter.setMaximum(Integer.MAX_VALUE);
-        formatter.setAllowsInvalid(false);
-        // If you want the value to be committed on each keystroke instead of focus lost
-        formatter.setCommitsOnValidEdit(true);
-        mobileField = new JFormattedTextField(formatter);
-        mobileField.setBounds(137, 80, 180, 25);
-        mobileField.setDocument(new LimitContact(10));
-        super.add(mobileField);*/
-       // mobileField.addKeyListener(new keyAdapter());
         mobileField = new JTextField();
         mobileField.setBounds(137, 80, 180, 25);
         mobileField.setDocument(new LimitContact(10));
         super.add(mobileField);
         mobileField.addKeyListener(new KeyAdapter() {
-
             @Override
-
             public void keyPressed(KeyEvent ke) {
                 if (ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9') {
                     if(first) {
-                        mobileField.setDocument(new LimitContact(10));//it is calling setText=0 somewhere in its subclass
+                        mobileField.setDocument(new LimitContact(10));
+                        //it is calling setText='' somewhere in its subclass
                         first=false;
                     }
                     mobileField.setEditable(true);
-
                 }
                 else if(ke.getKeyCode()==8){
                     mobileField.setEditable(true);
                 } else{
                     mobileField.setDocument(new LimitName(40));
-                    mobileField.setText("* Enter only numeric digits(0-9)");
+                    mobileField.setText("Enter only numeric digits(0-9)");
                     mobileField.setEditable(false);
                     first=true;
                 }
             }
         });
-
         password = new JLabel("Password:");
         password.setBounds(20, 110, 80, 25);
         super.add(password);
-        passwordField = new JTextField();
+        passwordField = new JPasswordField();
         passwordField.setBounds(137, 110, 180, 25);
         super.add(passwordField);
 
         confirmPass = new JLabel("Confirm Password:");
         confirmPass.setBounds(20, 140, 115, 25);
         super.add(confirmPass);
-        confirmPassField = new JTextField();
+        confirmPassField = new JPasswordField();
         confirmPassField.setBounds(137, 140, 180, 25);
         super.add(confirmPassField);
 
@@ -177,9 +157,14 @@ public class btn1Signup extends JFrame implements ActionListener {
         submit.addActionListener(this);
 
         home = new JButton("Home");
-        home.setBounds(125, 310, 80, 25);
+        home.setBounds(125, 300, 80, 25);
         super.add(home);
         home.addActionListener(this);
+
+        reset=new JButton("Reset All");
+        reset.setBounds(125,340,80,25);
+        super.add(reset);
+        reset.addActionListener(this);
 
 
         super.setResizable(false);
@@ -203,9 +188,35 @@ public class btn1Signup extends JFrame implements ActionListener {
 
         //--------------------------------------------------------------------------------------------------------//
 
-        else if (event.getSource().equals(submit)) {
-
-            if (nameField.getText().toUpperCase().trim().isBlank()) {
+        else if (event.getSource().equals(submit))//submit
+        {
+            if(nameField.getText().toUpperCase().trim().isBlank()&&emailField.getText().toUpperCase().trim().isBlank()
+            &&mobileField.getText().toUpperCase().trim().isBlank()&&passwordField.getText().toUpperCase().trim().isBlank()
+            &&confirmPassField.getText().toUpperCase().trim().isBlank()&&addressArea.getText().toUpperCase().trim().isBlank()
+            &&areaOfIntField.getText().toUpperCase().trim().isBlank()){
+                nameField.setBackground(Color.black);
+                nameField.setText("All fields are mandatory.");
+                nameField.setForeground(Color.white);
+                emailField.setBackground(Color.black);
+                emailField.setText("All fields are mandatory.");
+                emailField.setForeground(Color.white);
+                mobileField.setBackground(Color.black);
+                mobileField.setText("All fields are mandatory.");
+                mobileField.setForeground(Color.white);
+                passwordField.setBackground(Color.black);
+                passwordField.setText("All fields are mandatory.");
+                passwordField.setForeground(Color.white);
+                confirmPassField.setBackground(Color.black);
+                confirmPassField.setText("All fields are mandatory.");
+                confirmPassField.setForeground(Color.white);
+                addressArea.setBackground(Color.black);
+                addressArea.setText("All fields are mandatory.");
+                addressArea.setForeground(Color.white);
+                areaOfIntField.setBackground(Color.black);
+                areaOfIntField.setText("All fields are mandatory.");
+                areaOfIntField.setForeground(Color.white);
+            }
+            else if(nameField.getText().toUpperCase().trim().isBlank()) {
                 nameField.setBackground(Color.black);
                 nameField.setText("All fields are mandatory.");
                 nameField.setForeground(Color.white);
@@ -239,23 +250,74 @@ public class btn1Signup extends JFrame implements ActionListener {
                     Connection co = DriverManager.getConnection("jdbc:mysql://localhost:3306/user_Information",
                             "root", "root");
                     Statement st = co.createStatement();
-                    st.executeUpdate("CREATE TABLE IF NOT EXISTS USERS(NAME VARCHAR(40),EMAIL VARCHAR(30)," +
-                            "MOBILE INT(10), PASSWORD VARCHAR(20), ADDRESS VARCHAR(100)," +
+                    st.executeUpdate("CREATE TABLE IF NOT EXISTS USERS(NAME VARCHAR(40),EMAIL VARCHAR(30) PRIMARY KEY," +
+                            "MOBILE VARCHAR(10), PASSWORD VARCHAR(200), ADDRESS VARCHAR(100)," +
                             " AREAOFINTEREST VARCHAR(10))");
 
                     nameVar = nameField.getText();
                     emailVar = emailField.getText();
-                    mobileNo = Integer.parseInt(mobileField.getText());
+                    mobileNo = mobileField.getText();
                     passwordVar = passwordField.getText();
                     addressVar = addressArea.getText();
                     aOI = areaOfIntField.getText();
+                    if(!passwordVar.equals(confirmPassField.getText())){
+                        JOptionPane.showMessageDialog(null,"Entered Password & Confirm Password" +
+                                " field must be same.");
+                    }
+                    else{
+                        st.executeUpdate("INSERT INTO USERS VALUES('"+nameVar+"','"+emailVar+"'," +
+                                "'"+mobileNo+"',sha1('"+passwordVar+"'),'"+addressVar+"','"+aOI+"')");
+                        JOptionPane.showMessageDialog(null,"Congrats! Your Information has been saved.");
 
+                    }
 
-                } catch (Exception e) {
+                } catch (Exception e ) {
+                    JOptionPane.showMessageDialog(null, "Email id Already Exists");
                     e.printStackTrace();
                 }
             }
         }
+//-------------------------------------------------------------------------------------------------------------------------//
+        else if(event.getSource().equals(reset)){
+            nameField.setText("");
+            nameField.setBackground(Color.white);
+            nameField.setForeground(Color.BLACK);
+            emailField.setText("");
+            emailField.setBackground(Color.white);
+            emailField.setForeground(Color.BLACK);
+            mobileField.setText("");
+            mobileField.setBackground(Color.white);
+            mobileField.setForeground(Color.BLACK);
+            passwordField.setText("");
+            passwordField.setBackground(Color.white);
+            passwordField.setForeground(Color.BLACK);
+            confirmPassField.setText("");
+            confirmPassField.setBackground(Color.white);
+            addressArea.setForeground(Color.BLACK);
+            addressArea.setText("");
+            addressArea.setBackground(Color.white);
+            addressArea.setForeground(Color.BLACK);
+            areaOfIntField.setText("");
+            areaOfIntField.setBackground(Color.white);
+            areaOfIntField.setForeground(Color.BLACK);
 
+        }
     }
 }
+
+
+
+        /*NumberFormat format = NumberFormat.getInstance();
+        NumberFormatter formatter = new NumberFormatter(format);
+        formatter.setValueClass(Integer.class);
+        formatter.setMinimum(0);
+        formatter.setMaximum(Integer.MAX_VALUE);
+        formatter.setAllowsInvalid(false);
+        // If you want the value to be committed on each keystroke instead of focus lost
+        formatter.setCommitsOnValidEdit(true);
+        mobileField = new JFormattedTextField(formatter);
+        mobileField.setBounds(137, 80, 180, 25);
+        mobileField.setDocument(new LimitContact(10));
+        super.add(mobileField);*/
+// mobileField.addKeyListener(new keyAdapter());
+//mobileNo = Integer.parseInt(mobileField.getText());
