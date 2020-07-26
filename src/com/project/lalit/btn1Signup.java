@@ -161,7 +161,7 @@ public class btn1Signup extends JFrame implements ActionListener {
         super.add(home);
         home.addActionListener(this);
 
-        reset=new JButton("Reset All");
+        reset=new JButton("Reset");
         reset.setBounds(125,340,80,25);
         super.add(reset);
         reset.addActionListener(this);
@@ -191,8 +191,8 @@ public class btn1Signup extends JFrame implements ActionListener {
         else if (event.getSource().equals(submit))//submit
         {
             if(nameField.getText().toUpperCase().trim().isBlank()&&emailField.getText().toUpperCase().trim().isBlank()
-            &&mobileField.getText().toUpperCase().trim().isBlank()&&passwordField.getText().toUpperCase().trim().isBlank()
-            &&confirmPassField.getText().toUpperCase().trim().isBlank()&&addressArea.getText().toUpperCase().trim().isBlank()
+            &&mobileField.getText().toUpperCase().trim().isBlank()&&new String(passwordField.getPassword()).toUpperCase().trim().isBlank()
+            &&new String(confirmPassField.getPassword()).toUpperCase().trim().isBlank()&&addressArea.getText().toUpperCase().trim().isBlank()
             &&areaOfIntField.getText().toUpperCase().trim().isBlank()){
                 nameField.setBackground(Color.black);
                 nameField.setText("All fields are mandatory.");
@@ -228,11 +228,11 @@ public class btn1Signup extends JFrame implements ActionListener {
                 mobileField.setBackground(Color.black);
                 mobileField.setText("All fields are mandatory.");
                 mobileField.setForeground(Color.white);
-            } else if (passwordField.getText().toUpperCase().trim().isBlank()) {
+            } else if (new String(passwordField.getPassword()).toUpperCase().trim().isBlank()) {
                 passwordField.setBackground(Color.black);
                 passwordField.setText("All fields are mandatory.");
                 passwordField.setForeground(Color.white);
-            } else if (confirmPassField.getText().toUpperCase().trim().isBlank()) {
+            } else if (new String(confirmPassField.getPassword()).toUpperCase().trim().isBlank()) {
                 confirmPassField.setBackground(Color.black);
                 confirmPassField.setText("All fields are mandatory.");
                 confirmPassField.setForeground(Color.white);
@@ -255,12 +255,12 @@ public class btn1Signup extends JFrame implements ActionListener {
                             " AREAOFINTEREST VARCHAR(10))");
 
                     nameVar = nameField.getText();
-                    emailVar = emailField.getText();
+                    emailVar = emailField.getText().toLowerCase();
                     mobileNo = mobileField.getText();
-                    passwordVar = passwordField.getText();
+                    passwordVar = new String(passwordField.getPassword()).toLowerCase();
                     addressVar = addressArea.getText();
                     aOI = areaOfIntField.getText();
-                    if(!passwordVar.equals(confirmPassField.getText())){
+                    if(!passwordVar.equals (new String(confirmPassField.getPassword()))){
                         JOptionPane.showMessageDialog(null,"Entered Password & Confirm Password" +
                                 " field must be same.");
                     }
@@ -268,7 +268,27 @@ public class btn1Signup extends JFrame implements ActionListener {
                         st.executeUpdate("INSERT INTO USERS VALUES('"+nameVar+"','"+emailVar+"'," +
                                 "'"+mobileNo+"',sha1('"+passwordVar+"'),'"+addressVar+"','"+aOI+"')");
                         JOptionPane.showMessageDialog(null,"Congrats! Your Information has been saved.");
-
+                        nameField.setText("");
+                        nameField.setBackground(Color.white);
+                        nameField.setForeground(Color.BLACK);
+                        emailField.setText("");
+                        emailField.setBackground(Color.white);
+                        emailField.setForeground(Color.BLACK);
+                        mobileField.setText("");
+                        mobileField.setBackground(Color.white);
+                        mobileField.setForeground(Color.BLACK);
+                        passwordField.setText("");
+                        passwordField.setBackground(Color.white);
+                        passwordField.setForeground(Color.BLACK);
+                        confirmPassField.setText("");
+                        confirmPassField.setBackground(Color.white);
+                        addressArea.setForeground(Color.BLACK);
+                        addressArea.setText("");
+                        addressArea.setBackground(Color.white);
+                        addressArea.setForeground(Color.BLACK);
+                        areaOfIntField.setText("");
+                        areaOfIntField.setBackground(Color.white);
+                        areaOfIntField.setForeground(Color.BLACK);
                     }
 
                 } catch (Exception e ) {
@@ -277,7 +297,7 @@ public class btn1Signup extends JFrame implements ActionListener {
                 }
             }
         }
-//-------------------------------------------------------------------------------------------------------------------------//
+//----------------------------------------------------------------------------------------------------------------------//
         else if(event.getSource().equals(reset)){
             nameField.setText("");
             nameField.setBackground(Color.white);
